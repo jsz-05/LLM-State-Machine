@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.swp
+.DS_Store
+.idea
+.env
+conversation_fsm.log
+dist
+
+# temporary
+__init__.py
