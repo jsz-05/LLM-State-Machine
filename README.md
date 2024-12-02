@@ -43,16 +43,15 @@ This project provides a framework for creating conversational agents using a Fin
 
 2. Run your agent:
    ```python
-   if __name__ == "__main__":
-       import asyncio
-       asyncio.run(main())  # Starts the FSM-based agent
+    while not fsm.is_completed():  # Run until FSM reaches an END state
+        run_state: FSMRun = await fsm.run_state_machine(openai_client, user_input=user_input)
    ```
 
 ## Examples
 
-- **Light Switch Agent**: A simple agent that asks the user whether they want to turn a light on or off.
-- **Customer Support Agent**: A bot that collects user details and assists with customer queries.
-- **Medical Triage Agent**: A complex agent that helps assess if a medical situation is an emergency and collects patient data.
+- **Light Switch Agent**: A simple agent that asks the user whether they want to turn a light on or off. ```switch_agent.py```
+- **Customer Support Agent**: A bot that collects user details and assists with customer queries. ```support_agent.py```
+- **Medical Triage Agent**: A complex agent that helps assess if a medical situation is an emergency and collects patient data. ```medical_agent.py```
 
 <!-- ## Contributing
 Feel free to fork, star, and create pull requests. Contributions are welcome! -->
