@@ -1,6 +1,10 @@
 # FSM-based LLM Conversational Agents
 
 This project provides a framework for creating conversational agents using a Finite State Machine (FSM) powered by Large Language Models (LLMs) like OpenAI GPT.
+
+This is currently an experimental setup, and also part of a research project I am doing for university. For now it is meant for developers and experimenters mainly. Requires an OpenAI API key (currently tested on gpt-4o-mini).
+
+
 ## Features
 
 - Define states and transitions for your agent using a simple decorator.
