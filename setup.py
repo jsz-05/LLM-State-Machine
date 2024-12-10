@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="LLM-State-Machine",
+    name="fsm-llm",
     version="0.1.0",
     description="A Python framework for FSM-based LLM agents",
     author="Jeffrey Zhou",
