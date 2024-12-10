@@ -1,3 +1,4 @@
+# Ignore
 __pycache__/
 *.py[cod]
 *.swp
@@ -8,3 +9,8 @@ dist
 
 # Ignore egg-info directories
 *.egg-info/
+
+# Ignore build artifacts
+built/
+bdist.win-amd64/
+lib/
