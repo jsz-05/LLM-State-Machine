@@ -4,8 +4,7 @@ __pycache__/
 .DS_Store
 .idea
 .env
-conversation_fsm.log
 dist
 
-# temporary
-__init__.py
+# Ignore egg-info directories
+*.egg-info/
