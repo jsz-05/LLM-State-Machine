@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 import openai
-from core.fsm import LLMStateMachine
-from core.state_models import FSMRun
+from fsm_llm import LLMStateMachine
+from fsm_llm.state_models import FSMRun
 
 # Global variable to track on-off state
 SWITCH_STATE = "OFF"

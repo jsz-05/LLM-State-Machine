@@ -5,8 +5,8 @@ from enum import Enum
 from pydantic import BaseModel, Field
 import openai
 from dotenv import load_dotenv
-from core.fsm import LLMStateMachine
-from core.state_models import FSMRun, DefaultResponse, ImmediateStateChange
+from fsm_llm.fsm import LLMStateMachine
+from fsm_llm.state_models import FSMRun, DefaultResponse, ImmediateStateChange
 
 # Load environment variables
 load_dotenv()

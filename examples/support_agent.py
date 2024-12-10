@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
 import openai
-from core.fsm import LLMStateMachine
-from core.state_models import FSMRun, DefaultResponse
+from fsm_llm.fsm import LLMStateMachine
+from fsm_llm.state_models import FSMRun, DefaultResponse
 
 # Load environment variables
 load_dotenv()
