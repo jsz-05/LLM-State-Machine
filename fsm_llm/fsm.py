@@ -4,10 +4,10 @@ from typing import Any, Callable, Dict, Optional, Type
 import openai
 from pydantic import BaseModel, ValidationError
 
-from core.utils import _add_transitions, _generate_response_schema
-from core.llm_handler import LLMUtilities  # Updated import
+from fsm_llm.utils import _add_transitions, _generate_response_schema
+from fsm_llm.llm_handler import LLMUtilities  # Updated import
 
-from core.state_models import (
+from fsm_llm.state_models import (
     FSMRun,
     FSMState,
     DefaultResponse,

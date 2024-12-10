@@ -2,7 +2,7 @@ import json
 from typing import Callable, Dict, Any, Literal, Optional, Type, Union
 from pydantic import BaseModel, create_model
 
-from core.state_models import FSMState, DefaultResponse
+from fsm_llm.state_models import FSMState, DefaultResponse
 
 
 def _generate_response_schema(
