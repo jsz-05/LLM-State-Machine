@@ -1,13 +1,10 @@
-<span style="font-size: 30px; font-weight: bold;">FSM-based LLM Conversational Agents</span>
-
----
-
+# FSM-based LLM Conversational Agents
 This project provides a package framework for creating conversational agents using a Finite State Machine (FSM) powered by Large Language Models (LLMs). It integrates with OpenAI's API and provides an easy way to define states, transitions, and interactions.
 
 This is currently an experimental setup, and also part of a research project I am doing for university. For now it is meant for developers and experimenters mainly. Requires an OpenAI API key (currently tested on gpt-4o-mini and gpt-4o).
 
 
-# Features
+## Features
 
 - Define states and transitions for your agent using a simple decorator.
 - Handle dynamic conversation flow with flexible state management.
@@ -15,7 +12,7 @@ This is currently an experimental setup, and also part of a research project I a
 
 <br/>
 
-# Installation
+## Installation
 
 1. Install the package directly from PyPI:
    ```
@@ -31,7 +28,7 @@ This is currently an experimental setup, and also part of a research project I a
      ```
 <br/>
 
-# Usage Example (On/Off Switch)
+## Usage Example (On/Off Switch)
 
 ### 0. What is an FSM?
 A Finite State Machine (FSM) is a computational model used to design systems that can exist in one of a finite number of states at any given time. The system transitions from one state to another based on specific conditions or inputs.
@@ -57,7 +54,7 @@ fsm = LLMStateMachine(initial_state="START", end_state="END")
 
 The main feature of this framework is the ability to define states using the `@fsm.define_state` decorator. Each state has a unique key, a prompt that will be used for the LLM, and possible transitions to other states based on user input.
 
-#### Example 1: `START` State
+#### `START` State
 
 ```python
 @fsm.define_state(
@@ -83,7 +80,7 @@ async def start_state(fsm: LLMStateMachine, response: str, will_transition: bool
 
 Inside the function `start_state`, we check whether the FSM will transition to the `STATE_ON` or `END` state. If the transition happens, we update the `SWITCH_STATE` to `"ON"`.
 
-#### Example 2: `STATE_ON` State
+#### `STATE_ON` State
 
 ```python
 @fsm.define_state(
@@ -103,7 +100,7 @@ async def state_on(fsm: LLMStateMachine, response: str, will_transition: bool):
 
 The logic inside `state_on` checks the transition. If the FSM is transitioning back to the `START` state, it sets the `SWITCH_STATE` to `"OFF"`.
 
-#### Example 3: `END` State
+#### `END` State
 
 ```python
 @fsm.define_state(
@@ -150,7 +147,7 @@ async def main():
 
 <br/>
 
-# Examples
+## Examples
 
 - **Light Switch Agent**: A simple agent that asks the user whether they want to turn a switch on or off. ```switch_agent.py```
 - **Customer Support Agent**: A bot that collects user details and assists with customer queries. ```support_agent.py```

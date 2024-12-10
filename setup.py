@@ -1,9 +1,14 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r", encoding="utf-8") as f:
+    long_description = f.read()
+
 setup(
     name="fsm-llm",
-    version="0.1.0",
-    description="A Python framework for FSM-based LLM agents",
+    version="0.1.3",
+    description="A Python framework for creating FSM-based LLM agents",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Jeffrey Zhou",
     author_email="jeffreyzhou3@outlook.com",
     url="https://github.com/jsz-05/LLM-State-Machine",
