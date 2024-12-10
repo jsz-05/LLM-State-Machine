@@ -10,7 +10,6 @@ This is currently an experimental setup, and also part of a research project I a
 - Handle dynamic conversation flow with flexible state management.
 - Integrates with GPT models to generate responses based on state context.
 
-<br/>
 
 ## Installation
 
@@ -26,7 +25,6 @@ This is currently an experimental setup, and also part of a research project I a
      OPENAI_API_KEY=your-api-key
      OPENAI_ORGANIZATION=your-organization-id
      ```
-<br/>
 
 ## Usage Example (On/Off Switch)
 
@@ -145,7 +143,6 @@ async def main():
 
 
 
-<br/>
 
 ## Examples
 
