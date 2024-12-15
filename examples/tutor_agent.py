@@ -1,6 +1,7 @@
 import openai
-from core.fsm import LLMStateMachine
-from core.state_models import FSMRun
+from fsm_llm import LLMStateMachine
+from fsm_llm.state_models import FSMRun
+import json
 
 # Initialize the FSM
 fsm = LLMStateMachine(initial_state="show_content", end_state="END")
@@ -14,11 +15,31 @@ LEARNING_STATE = {
 USER_ACTIONS = ["ua_next", "ua_ask_clarifying_content", "ua_ask_clarifying_example"]
 SYSTEM_ACTIONS = ["sa_show_content", "sa_show_example", "sa_show_quiz"]
 
+CONTENT_FILE = "../content/calculus_content.json"
+# Function to load content dynamically from a file
+def load_content(content_id, file_path=CONTENT_FILE):
+    try:
+        with open(file_path, "r") as file:
+            content_data = json.load(file)  # Assumes content is stored as JSON
+        return content_data.get(str(content_id), "Content not found.")  # Default if ID not found
+    except Exception as e:
+        return f"Error loading content: {e}"
+
+EXAMPLE_FILE = "../content/calculus_example.json"
+# Function to load content dynamically from a file
+def load_examples(example_id, file_path=EXAMPLE_FILE):
+    try:
+        with open(file_path, "r") as file:
+            example_data = json.load(file)  # Assumes content is stored as JSON
+        return example_data.get(str(example_id), "Content not found.")  # Default if ID not found
+    except Exception as e:
+        return f"Error loading content: {e}"
+
 
 # Define the `show_content` state
 @fsm.define_state(
     state_key="show_content",
-    prompt_template="You are a tutor. Present the content for topic {current_content_id}.",
+    prompt_template=f"You are a tutor. Present the content for topic {load_content(LEARNING_STATE['current_content_id'])}.",
     transitions={
         "show_content": "If the user wants to move to the next section or the system determines to show content.",
         "show_example": "If the user asks for an example or the system decides to show one.",
