@@ -1,0 +1,27 @@
+[
+    {
+        "id": "1",
+        "content_id": "2",
+        "content_name": "On Different Degrees of Smallness",
+        "example": "Let us think of x as a quantity that can grow by a small amount so as to become x+dx, where dx is the small increment added by growth. The square of this is x^2+2x·dx+(dx)^2. The second term is not negligible because it is a first-order quantity; while the third term is of the second order of smallness, being a bit of, a bit of x^2. Thus if we took dx to mean numerically, say, 1/60 of x, then the second term would be 2/60 of x^2, whereas the third term would be 1/3600 of x^2. This last term is clearly less important than the second. But if we go further and take dx to mean only 1/1000 of x, then the second term will be 2/1000 of x^2, while the third term will be only 1/1,000,000 of x^2.\n\nGeometrically this may be depicted as follows: Draw a square (Figure 1) the side of which we will take to represent x. Now suppose the square to grow by having a bit dx added to its size each way. The enlarged square is made up of the original square x^2, the two rectangles at the top and on the right, each of which is of area x·dx (or together 2x·dx), and the little square at the top right-hand corner which is (dx)^2. In Figure 2 we have taken dx as quite a big fraction of x–about 1/5. But suppose we had taken it only 1/100–about the thickness of an inked line drawn with a fine pen. Then the little corner square will have an area of only 1/10,000 of x^2, and be practically invisible. Clearly (dx)^2 is negligible if only we consider the increment dx to be itself small enough."
+    },
+    {
+        "id": "2",
+        "content_id": "4",
+        "content_name": "Simplest Cases",
+        "example": "Try differentiating y=x³ in the same way. We let y grow to y+dy, while x grows to x+dx. Then we have y+dy=(x+dx)³. Doing the cubing we obtain y+dy=x³+3x²·dx+3x(dx)²+(dx)³. Now we know that we may neglect small quantities of the second and third orders; since, when dy and dx are both made indefinitely small, (dx)² and (dx)³ will become indefinitely smaller by comparison. So, regarding them as negligible, we have left: y+dy=x³+3x²·dx. But y=x³; and, subtracting this, we have: dy and dydx=3x²·dx,=3x²."
+    },
+    {
+        "id": "3",
+        "content_id": "4",
+        "content_name": "Simplest Cases",
+        "example": "Try differentiating y=x⁴. Starting as before by letting both y and x grow a bit, we have: y+dy=(x+dx)⁴. Working out the raising to the fourth power, we get y+dy=x⁴+4x³dx+6x²(dx)²+4x(dx)³+(dx)⁴. Then striking out the terms containing all the higher powers of dx, as being negligible by comparison, we have y+dy=x⁴+4x³dx. Subtracting the original y=x⁴, we have left dy and dydx=4x³dx,=4x³. Now all these cases are quite easy. Let us collect the results to see if we can infer any general rule. Put them in two columns, the values of y in one and the corresponding values found for dydx in the other: thus y dydx x² 2x x³ 3x² x⁴ 4x³ Just look at these results: the operation of differentiating appears to have had the effect of diminishing the power of x by 1 (for example in the last case reducing x⁴ to x³), and at the same time multiplying by a number (the same number in fact which originally appeared as the power). Now, when you have once seen this, you might easily conjecture how the others will run. You would expect that differentiating x⁵ would give 5x⁴, or differentiating x⁶ would give 6x⁵. If you hesitate, try one of these, and see whether the conjecture comes right."
+    },
+    {
+        "id": "4",
+        "content_id": "4",
+        "content_name": "Simplest Cases",
+        "example": "",
+    },
+
+]
