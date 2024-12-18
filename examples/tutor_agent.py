@@ -1,7 +1,16 @@
+import os
+from dotenv import load_dotenv
 import openai
 from fsm_llm import LLMStateMachine
 from fsm_llm.state_models import FSMRun
 import json
+
+# Load environment variables
+load_dotenv()
+
+# Initialize OpenAI API key
+openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.organization = os.getenv("OPENAI_ORGANIZATION")
 
 # Initialize the FSM
 fsm = LLMStateMachine(initial_state="show_content", end_state="END")
@@ -21,19 +30,42 @@ def load_content(content_id, file_path=CONTENT_FILE):
     try:
         with open(file_path, "r") as file:
             content_data = json.load(file)  # Assumes content is stored as JSON
-        return content_data.get(str(content_id), "Content not found.")  # Default if ID not found
+
+        # Loop through the list to find the matching content ID
+        for item in content_data:
+            if item.get("id") == str(content_id):
+                return item.get("content", "Content field not found.")  # Return the 'content' field
+
+        return "Content not found."  # Default if ID not found
+    except json.JSONDecodeError:
+        return "Error: Failed to decode JSON."
+    except FileNotFoundError:
+        return f"Error: File '{file_path}' not found."
     except Exception as e:
         return f"Error loading content: {e}"
 
+
+
 EXAMPLE_FILE = "../content/calculus_example.json"
 # Function to load content dynamically from a file
-def load_examples(example_id, file_path=EXAMPLE_FILE):
+def load_example(content_id, file_path=EXAMPLE_FILE):
     try:
         with open(file_path, "r") as file:
             example_data = json.load(file)  # Assumes content is stored as JSON
-        return example_data.get(str(example_id), "Content not found.")  # Default if ID not found
+
+        # Loop through the list to find the matching content ID
+        for item in example_data:
+            if item.get("content_id") == str(content_id):
+                return item.get("example", "example field not found.")  # Return the 'content' field
+
+        return "Example not found."  # Default if ID not found
+    except json.JSONDecodeError:
+        return "Error: Failed to decode JSON."
+    except FileNotFoundError:
+        return f"Error: File '{file_path}' not found."
     except Exception as e:
         return f"Error loading content: {e}"
+
 
 
 # Define the `show_content` state
@@ -41,43 +73,43 @@ def load_examples(example_id, file_path=EXAMPLE_FILE):
     state_key="show_content",
     prompt_template=f"You are a tutor. Present the content for topic {load_content(LEARNING_STATE['current_content_id'])}.",
     transitions={
-        "show_content": "If the user wants to move to the next section or the system determines to show content.",
-        "show_example": "If the user asks for an example or the system decides to show one.",
-        "quiz": "If the system determines the user should take a quiz.",
+        "show_content": "If the user wants to move to the next section.",
+        "show_example": "If the user asks for an example.",
+        "quiz": "If the user asks for a quiz.",
     },
 )
-async def show_content_state(fsm: LLMStateMachine, response: str, will_transition: bool):
-    if will_transition:
-        if fsm.get_next_state() == "show_example":
-            return f"Here's an example for content ID {LEARNING_STATE['current_content_id']}."
-        elif fsm.get_next_state() == "quiz":
-            return f"Let's test your knowledge on content ID {LEARNING_STATE['current_content_id']}."
+async def show_content_state(fsm: LLMStateMachine, response: str):
+    if fsm.get_next_state() == "show_example":
+        return f"Here's an example for content ID {load_example(LEARNING_STATE['current_content_id'])}."
+    elif fsm.get_next_state() == "quiz":
+        return f"Let's test your knowledge on content ID {LEARNING_STATE['current_content_id']}."
+    LEARNING_STATE['current_content_id']+= 1;
     return f"Here's the content for topic {LEARNING_STATE['current_content_id']}."
 
 
 # Define the `show_example` state
 @fsm.define_state(
     state_key="show_example",
-    prompt_template="You are a tutor. Provide an example for topic {current_content_id}.",
+    prompt_template=f"You are a tutor. Provide an example for topic {load_example(LEARNING_STATE['current_content_id'])}.",
     transitions={
-        "show_content": "If the user asks for more content or the system determines to show content.",
+        "show_content": "If the user asks for more content.",
         "show_example": "If the user asks for another example.",
-        "quiz": "If the system decides to show a quiz.",
+        "quiz": "If the user asks for a quiz.",
     },
 )
-async def show_example_state(fsm: LLMStateMachine, response: str, will_transition: bool):
-    if will_transition:
-        if fsm.get_next_state() == "show_content":
-            return f"Returning to the content for topic {LEARNING_STATE['current_content_id']}."
-        elif fsm.get_next_state() == "quiz":
-            return f"Let's test your knowledge on content ID {LEARNING_STATE['current_content_id']}."
+async def show_example_state(fsm: LLMStateMachine, response: str):
+    if fsm.get_next_state() == "show_content":
+        LEARNING_STATE['current_content_id']+= 1;
+        return f"Returning to the content for topic {load_content(LEARNING_STATE['current_content_id'])}."
+    elif fsm.get_next_state() == "quiz":
+        return f"Let's test your knowledge on content ID {LEARNING_STATE['current_content_id']}."
     return f"Here's another example for content ID {LEARNING_STATE['current_content_id']}."
 
 
 # Define the `quiz` state
 @fsm.define_state(
     state_key="quiz",
-    prompt_template="You are a tutor. Create a quiz for topic {current_content_id}.",
+    prompt_template="You are a tutor. Create a quiz for topic {LEARNING_STATE['current_content_id']}.",
     transitions={
         "show_content": "If the system decides to return to content.",
         "show_example": "If the system decides to show an example.",
