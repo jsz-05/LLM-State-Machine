@@ -111,17 +111,16 @@ async def show_example_state(fsm: LLMStateMachine, response: str):
     state_key="quiz",
     prompt_template="You are a tutor. Create a quiz for topic {LEARNING_STATE['current_content_id']}.",
     transitions={
-        "show_content": "If the system decides to return to content.",
-        "show_example": "If the system decides to show an example.",
+        "show_content": "If the user asks for more content.",
+        "show_example": "If the user asks for another example.",
         "quiz": "If the user wants another quiz.",
     },
 )
-async def quiz_state(fsm: LLMStateMachine, response: str, will_transition: bool):
-    if will_transition:
-        if fsm.get_next_state() == "show_content":
-            return f"Returning to the content for topic {LEARNING_STATE['current_content_id']}."
-        elif fsm.get_next_state() == "show_example":
-            return f"Here's an example for content ID {LEARNING_STATE['current_content_id']}."
+async def quiz_state(fsm: LLMStateMachine, response: str):
+    if fsm.get_next_state() == "show_content":
+        return f"Returning to the content for topic {load_content(LEARNING_STATE['current_content_id'])}."
+    elif fsm.get_next_state() == "show_example":
+        return f"Here's an example for content ID {load_example(LEARNING_STATE['current_content_id'])}."
     return f"Here's your quiz for content ID {LEARNING_STATE['current_content_id']}."
 
 
@@ -130,7 +129,7 @@ async def quiz_state(fsm: LLMStateMachine, response: str, will_transition: bool)
     state_key="END",
     prompt_template="The learning session has concluded. Goodbye!",
 )
-async def end_state(fsm: LLMStateMachine, response: str, will_transition: bool):
+async def end_state(fsm: LLMStateMachine, response: str):
     return "Thank you for learning! Goodbye!"
 
 
