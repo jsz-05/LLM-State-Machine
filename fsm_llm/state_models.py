@@ -71,9 +71,9 @@ class ImmediateStateChange(BaseModel):
     - next_state (str): The state to transition to.
     - input (str): Input for the new state (default: "Hey").
     - keep_original_response (bool): Preserve and prepend the original response.
-    - keep_original_seperator (str): Separator between original and new response.
+    - keep_original_separator (str): Separator between original and new response.
     """
     next_state: str
     input: str = "Default"
     keep_original_response: bool = False
-    keep_original_seperator: str = " "
+    keep_original_separator: str = " "
