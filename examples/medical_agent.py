@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from typing import List, Optional, Dict
+from typing import List, Optional
 from enum import Enum
 from pydantic import BaseModel, Field
 import openai
@@ -10,6 +10,12 @@ from fsm_llm.state_models import FSMRun, DefaultResponse, ImmediateStateChange
 
 # Load environment variables
 load_dotenv()
+
+# ANSI color codes
+GREY = "\033[90m"
+LIGHT_BLUE = "\033[94m"
+ORANGE = "\033[38;5;208m"
+RESET = "\033[0m"
 
 class Severity(str, Enum):
     LOW = "low"
@@ -98,8 +104,8 @@ async def initial_triage(
         )
     
     return (
-        f"Assessment: {response.reasoning}\n"
-        f"Recommended Action: {response.recommended_action}\n"
+        "Assessment: " + response.reasoning + "\n"
+        "Recommended Action: " + response.recommended_action + "\n"
         "Since this isn't an immediate emergency, I'll need to gather some information about you. "
         "Please provide your name, age, gender, any existing medical conditions, "
         "current medications, and allergies."
@@ -123,7 +129,7 @@ async def emergency_handler(
     emergency_data = fsm.get_context_data("emergency_assessment")
     return (
         "🚨 EMERGENCY SITUATION DETECTED 🚨\n"
-        f"{response.content}\n\n"
+        + response.content + "\n\n"
         "Please call emergency services immediately (911 in the US).\n"
         "Stay on the line while help is dispatched."
     )
@@ -137,7 +143,7 @@ async def emergency_handler(
     """,
     response_model=PatientInfo,
     transitions={
-        "DRUG_INTERACTION_CHECK": "When all critical patient information is gathered",
+        "SYMPTOM_ASSESSMENT": "When patient info is complete",
         "EMERGENCY": "If any red flags are detected in patient history",
     }
 )
@@ -155,41 +161,6 @@ async def gather_patient_info(
     )
 
 @fsm.define_state(
-    state_key="DRUG_INTERACTION_CHECK",
-    prompt_template="""
-    Analyze the patient's current medications for potential interactions.
-    Consider both existing conditions and reported symptoms.
-    Flag any concerning combinations or contraindications.
-    """,
-    response_model=DrugInteraction,
-    transitions={
-        "SYMPTOM_ASSESSMENT": "If no severe interactions are found",
-        "EMERGENCY": "If dangerous drug interactions are detected",
-    }
-)
-async def check_drug_interactions(
-    fsm: LLMStateMachine,
-    response: DrugInteraction,
-    will_transition: bool
-) -> str:
-    fsm.set_context_data("drug_interactions", response.model_dump())
-    
-    if response.severity == Severity.CRITICAL:
-        return ImmediateStateChange(
-            next_state="EMERGENCY",
-            input=f"Critical drug interaction detected: {response.description}"
-        )
-    
-    interaction_msg = (
-        f"Medication Analysis:\n"
-        f"Severity: {response.severity}\n"
-        f"Details: {response.description}\n"
-        f"Recommendation: {response.recommendation}\n\n"
-    )
-    
-    return interaction_msg + "Now, let's assess your symptoms in detail."
-
-@fsm.define_state(
     state_key="SYMPTOM_ASSESSMENT",
     prompt_template="""
     Analyze the reported symptoms considering:
@@ -202,7 +173,7 @@ async def check_drug_interactions(
     """,
     response_model=SymptomAssessment,
     transitions={
-        "GENERATE_PLAN": "If symptoms are well understood and non-emergency",
+        "DRUG_INTERACTION_CHECK": "If symptoms are well understood and non-emergency",
         "EMERGENCY": "If symptoms suggest a serious condition",
     }
 )
@@ -234,6 +205,41 @@ async def assess_symptoms(
             assessment += f"- {question}\n"
     
     return assessment
+
+@fsm.define_state(
+    state_key="DRUG_INTERACTION_CHECK",
+    prompt_template="""
+    Analyze the patient's current medications for potential interactions.
+    Consider both existing conditions and reported symptoms.
+    Flag any concerning combinations or contraindications.
+    """,
+    response_model=DrugInteraction,
+    transitions={
+        "GENERATE_PLAN": "If no severe interactions are found",
+        "EMERGENCY": "If dangerous drug interactions are detected",
+    }
+)
+async def check_drug_interactions(
+    fsm: LLMStateMachine,
+    response: DrugInteraction,
+    will_transition: bool
+) -> str:
+    fsm.set_context_data("drug_interactions", response.model_dump())
+    
+    if response.severity == Severity.CRITICAL:
+        return ImmediateStateChange(
+            next_state="EMERGENCY",
+            input=f"Critical drug interaction detected: {response.description}"
+        )
+    
+    interaction_msg = (
+        f"Medication Analysis:\n"
+        f"Severity: {response.severity}\n"
+        f"Details: {response.description}\n"
+        f"Recommendation: {response.recommendation}\n\n"
+    )
+    
+    return interaction_msg + "Now, let's generate your treatment plan."
 
 @fsm.define_state(
     state_key="GENERATE_PLAN",
@@ -312,20 +318,19 @@ async def end_state(
 
 async def main():
     openai_client = openai.AsyncOpenAI()
-    print("Medical Triage System Initialized")
-    print("Please describe your medical concern:")
+    print(GREY + "Medical Triage System Initialized" + RESET)
+    print(GREY + "Please describe your medical concern:" + RESET)
     
     while not fsm.is_completed():
-        user_input = input("You: ")
-        if user_input.lower() in ["quit", "exit"]:
-            break
-            
+        # Instead of fsm.current_state, we print the state from the FSMRun
         run_state: FSMRun = await fsm.run_state_machine(
             openai_client,
-            user_input=user_input,
+            user_input=input(ORANGE + "You: " + RESET),
             model="gpt-4o-mini"
         )
-        print(f"System: {run_state.response}")
+        # Assuming run_state has an attribute `state` representing the current state key.
+        print(LIGHT_BLUE + f"Current state: {run_state.state}" + RESET)
+        print(GREY + f"System: {run_state.response}" + RESET)
 
 if __name__ == "__main__":
     import asyncio
