@@ -1,12 +1,16 @@
 # FSM-based LLM Conversational Agents
-[![PyPI version](https://img.shields.io/pypi/v/fsm-llm.svg?style=flat-square)](https://pypi.org/project/fsm-llm/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/fsm-llm.svg?style=flat-square)](https://pypi.org/project/fsm-llm/)
+[![PyPI version](https://img.shields.io/pypi/v/fsm-llm.svg?style=flat)](https://pypi.org/project/fsm-llm/)
+[![PyPI Downloads](https://static.pepy.tech/badge/fsm-llm)](https://pepy.tech/projects/fsm-llm)
+
 
 
 This project provides a package framework for creating conversational agents using a Finite State Machine (FSM) powered by Large Language Models (LLMs). It integrates with OpenAI's API and provides an easy way to define states, transitions, and interactions.
 
-This is currently an experimental setup, and also part of a research project I am doing for university. For now it is meant for developers and experimenters mainly. Requires an OpenAI API key (currently tested on gpt-4o-mini and gpt-4o).
+This is currently an experimental setup, and also part of a research project I am doing for university. For now it is meant for developers and experimenters mainly. Requires an OpenAI API key (currently tested on gpt-4o-mini and gpt-4o). 
 
+I intend to continue working on this in the (hopefully) near future! If there are bugs please create an issue and I will try my best to provide critical updates.
+
+Package last updated: Dec 2024
 
 ## Features
 
